@@ -1,0 +1,106 @@
+---
+title: "assignment 1"
+author: "LiangSang"
+date: "2023-10-9"
+output: html_document
+---
+Exercise 1
+A template .Rmarkdown file can be found in this repository here.
+
+Take a fork of the entire repository to use throughout the course. Set your forked version as public (if it is not public by default), and report the URL of your repository. The marker will check whether you have successfully forked the repository. For example:
+
+“My forked version of the assignment template repository can be found at www.github.com/tsrobinson/472_assignment_template”
+```{r setup1}
+print("My forked version of the assignment template repository can be found at https://github.com/KENZO666888/KENZO_LIANGSANG_472_assignment.git")
+```
+
+Exercise 2
+R includes several built-in datasets, that can be found by calling data(). You can load a specific dataset into memory by calling data("name_of_dataset").
+
+First, pick any of the built-in datasets and load it into R.
+
+Report whether your chosen dataset is “tidy” and explain why. You should evidence your claim by presenting the output of the head() function. This function shows the first few rows of the target object.
+
+If you believe your data is tidy, use R to create an untidy version in either wide or long format. If you believe your data is untidy, convert your data to a tidy format. Again, evidence your work by including the output from head() on your converted data frame. Finally, discuss briefly, in words, what you did and why your data is now tidy/untidy compared to the original dataset.
+
+```{r setup2} 
+knitr::opts_chunk$set(echo = TRUE)
+# Load the built-in Titanic dataset into memory
+library(dplyr)
+library(tidyr)
+library(datasets)
+
+# Load the Titanic dataset and convert it to a data frame
+data(Titanic)
+tidy_titanic <- as.data.frame(Titanic)
+
+# Display the first few rows of the Titanic dataset
+head(tidy_titanic)
+
+# Create an untidy version of the Titanic dataset
+untidy_titanic <- tidy_titanic %>%
+  spread(key = Survived, value = Freq)
+
+# Display the untidy version
+head(untidy_titanic)
+
+# The original data is "tidy" because it adheres to the principles of "tidy data" proposed by Hadley Wickham:
+# - Each variable is in a separate column.
+# - Each observation is in a separate row.
+# - There is one type of observation unit per table.
+
+# In the Titanic dataset:
+# - Each variable (e.g., "Class," "Sex," "Age," "Survived," "Freq") is stored in separate columns.
+# - Each observation (i.e., data for each passenger) is in individual rows.
+# - The entire dataset represents a single type of observation unit (passengers).
+# This structure makes the data easy to analyze, visualize, and manipulate.
+
+# However, when the data was transformed from "tidy" to "untidy" using the spread function, the values from the "Survived" column
+# were moved from the original columns into new columns. This resulted in the creation of multiple new columns, representing the survival status of "Yes" and "No."
+# This restructuring disrupted the "tidy data" structure because now, information for each observation unit (passenger) is no longer in separate rows but scattered across different columns.
+# This makes the data more challenging to analyze, and as a result, it shifted from "tidy" to "untidy."
+
+# In this case, it may be more appropriate to retain the original "tidy" data structure as it better aligns with the requirements of data analysis.
+
+
+```
+
+Exercise 3
+Choose a different built-in dataset within R and load it into memory.
+
+Your task is to transform this data frame and demonstrate the use of at least the following three components:
+
+A piping operator: either %>% or |>
+A call to the group_by() and summarise() functions
+A transformation of a numeric variable after having called summarise()
+For this question you should report the code you use here (rather than only in the code appendix) by using echo=TRUE in this code chunk’s options. Each step should be annotated with a code comment that succinctly explains what you are doing. Evidence your work by including the output from head() on your transformed data. Finally, discuss some aspect of the transformed data that is informative and that would not have been evident from the original format of the data.
+```{r setup3}
+knitr::opts_chunk$set(echo = TRUE)
+# Load the mtcars dataset into memory
+data(mtcars)
+
+# Display the first few rows of the mtcars dataset
+head(mtcars)
+
+# Step 1: Use the piping operator (%>) to chain operations.
+# Step 2: Group the dataset by the number of cylinders and summarize the average horsepower and miles per gallon.
+mtcars_summary <- mtcars %>%
+  group_by(cyl) %>%
+  summarise(AvgHorsepower = mean(hp), AvgMPG = mean(mpg))
+
+# Display the summarized data
+head(mtcars_summary)
+
+# Step 3: Transform the numeric variable "AvgHorsepower" by multiplying it by 2.
+mtcars_summary2 <- mtcars_summary %>%
+  mutate(AvgHorsepower = 2 * AvgHorsepower)
+
+# Display the transformed data
+head(mtcars_summary2)
+
+# Discuss the transformation:
+# The transformation of doubling the average horsepower provides insights into the performance of cars
+# based on the number of cylinders. Doubling the average horsepower allows for easier comparisons and
+# highlights the impact of horsepower on different cylinder configurations.
+```
+
